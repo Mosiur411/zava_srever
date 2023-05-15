@@ -57,9 +57,9 @@ const addBulkProduct = async (req, res) => {
     }
 }
 
-const getProduct = async (req, res) => { 
+const getProduct = async (req, res) => {
     try {
-        const product = await ProductModel.find({}).sort({ _id: -1 }).populate(['development_id',  'user'])
+        const product = await ProductModel.find({}).sort({ _id: -1 }).populate(['development_id', 'user'])
         return res.status(201).json({ product })
     } catch (err) {
         const errorMessage = errorMessageFormatter(err)
@@ -68,5 +68,17 @@ const getProduct = async (req, res) => {
 
 }
 const updateProduct = async (req, res) => { }
-const deleteProduct = async (req, res) => { }
+const deleteProduct = async (req, res) => {
+    try {
+        const { _id } = req.query;
+        const product = await ProductModel.deleteOne(_id);
+        return res.status(201).json({ product })
+    } catch (err) {
+        const errorMessage = errorMessageFormatter(err)
+        return res.status(500).json(errorMessage)
+    }
+
+
+
+}
 module.exports = { addProduct, getProduct, updateProduct, deleteProduct, addBulkProduct }

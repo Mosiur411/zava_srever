@@ -36,36 +36,11 @@ const getCategoties = async (req, res) => {
     }
 }
 
-
-
 const deleteCategoties = async (req, res) => {
-    const { categoty_id } = req.query;
-
     try {
-        const result = await DevelopmentModel.aggregate([
-            {
-                $lookup: {
-                    from: 'categories',
-                    localField: 'category',
-                    foreignField: '_id',
-                    as: 'category'
-                }
-            },
-            {
-                $match: {
-                    'category._id': new mongoose.Types.ObjectId(categoty_id),
-                }
-            },
-            {
-                $unset: 'category'
-            },
-            {
-                $unwind: '$developments'
-            }
-        ]).then(() => CategorieModel.findByIdAndDelete(categoty_id));
+        const { categoty_id } = req.query;
+        const result = await CategorieModel.deleteMany({ _id: { $in: categoty_id } });
         return res.status(201).json({ result })
-
-
     } catch (err) {
         const errorMessage = errorMessageFormatter(err)
         return res.status(500).json(errorMessage)
@@ -78,3 +53,25 @@ const deleteCategoties = async (req, res) => {
 module.exports = {
     addCategoties, getCategoties, deleteCategoties
 }
+
+/*   // const result = await DevelopmentModel.aggregate([
+        //     {
+        //         $lookup: {
+        //             from: 'categories',
+        //             localField: 'category',
+        //             foreignField: '_id',
+        //             as: 'category'
+        //         }
+        //     },
+        //     {
+        //         $match: {
+        //             'category._id': new mongoose.Types.ObjectId(categoty_id),
+        //         }
+        //     },
+        //     {
+        //         $unset: 'category'
+        //     },
+        //     {
+        //         $unwind: '$developments'
+        //     }
+        // ]).then(() => CategorieModel.findByIdAndDelete(categoty_id)); */
