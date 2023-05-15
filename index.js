@@ -35,6 +35,6 @@ const mongodb_uri = process.env.PROD_DB;
 connectDatabase(mongodb_uri)
 initializeFirebase()
 
-app.listen(port, () => {
+app.listen(port,"0.0.0.0", () => {
     console.log(`Example app listening on port ${process.env.PORT}`)
 })
